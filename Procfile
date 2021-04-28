@@ -1,3 +1,3 @@
 release: bash ./deploy.sh
 
-web: cd src && gunicorn safety_rules.wsgi --log-file -
+web: cd src && gunicorn safety.wsgi --log-file -
