@@ -30,7 +30,8 @@ INSTALLED_APPS = [
 
     # Local
     'users',
-    'core'
+    'core',
+    'files',
 ]
 
 MIDDLEWARE = [
