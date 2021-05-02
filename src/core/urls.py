@@ -1,7 +1,7 @@
 from django.urls import path
 
-from core.views import MediaDownloadView
+from . import views
 
 urlpatterns = [
-    path('testing/', MediaDownloadView.as_view())
+    path('videos/<str:code>/', views.VideoRetrieveView.as_view()),
 ]
