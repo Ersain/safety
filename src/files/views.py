@@ -1,10 +1,9 @@
-from rest_framework import permissions
+from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
 from .models import File
 from .serializers import FileSerializer
-from .services.s3 import S3Services
 
 
 class FileRetrieveView(GenericAPIView):
@@ -18,5 +17,5 @@ class FileRetrieveView(GenericAPIView):
     # noinspection PyMethodMayBeStatic
     def get(self, request, *args, **kwargs):
         obj: File = self.get_object()
-        url = S3Services.generate_object_url(obj.file.name)
-        return Response({'url': url})
+        serializer = self.get_serializer(obj)
+        return Response(serializer.data, status=status.HTTP_200_OK)
