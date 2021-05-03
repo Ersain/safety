@@ -12,7 +12,7 @@ class FileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = File
-        fields = ('url',)
+        fields = ('code', 'title', 'url')
 
     def get_url(self, obj):
         return S3Services.generate_object_url(obj.file.name)
