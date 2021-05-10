@@ -28,4 +28,4 @@ class File(models.Model):
     file = models.FileField()
 
     def __str__(self):
-        return f'{self.title} - {self.file.name}'
+        return f'{self.code} [{self.title} - {self.file.name}]'
