@@ -1,9 +1,10 @@
+from django.db.models import Prefetch
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from .models import QuizCategory, Quiz
+from .models import QuizCategory, Quiz, Question
 from .serializers import (
     QuizCategoryRetrieveSerializer,
     QuizCategoryListSerializer,
@@ -24,7 +25,9 @@ class QuizCategoryViewSet(ReadOnlyModelViewSet):
 
 
 class QuizViewSet(ReadOnlyModelViewSet):
-    queryset = Quiz.objects.all()
+    queryset = Quiz.objects.prefetch_related(
+        Prefetch('questions', queryset=Question.objects.order_by('?'))
+    )
     serializer_class = QuizListSerializer
 
     def get_serializer_class(self):

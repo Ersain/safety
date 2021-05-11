@@ -1,19 +1,24 @@
 from random import randint
 
 from django.core.mail import EmailMessage
-from rest_framework.exceptions import ValidationError
+from rest_framework import status
+from rest_framework.exceptions import ValidationError, AuthenticationFailed
 
 from .models import VerificationCode
 
 INFO_RECOVERY_CODE_SENT = {
-    'info': 'A recovery code has been sent to your email'
+    'message': 'A recovery code has been sent to your email'
 }
 INFO_PASSWORD_RESET = {
-    'info': 'A new password was set'
+    'message': 'A new password was set'
 }
 ERROR_INVALID_CREDENTIALS = {
-    'error': 'Invalid credentials'
+    'detail': 'Invalid credentials'
 }
+
+
+class AuthenticationException(AuthenticationFailed):
+    status_code = status.HTTP_400_BAD_REQUEST
 
 
 class Util:

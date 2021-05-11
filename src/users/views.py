@@ -1,9 +1,12 @@
 from rest_framework import status
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.exceptions import InvalidToken
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import User, VerificationCode
 from .serializers import (
@@ -11,7 +14,25 @@ from .serializers import (
     ResetPasswordSerializer, ForgotPasswordSerializer
 )
 from .services import UserServices
-from .utils import Util, INFO_RECOVERY_CODE_SENT, INFO_PASSWORD_RESET
+from .utils import (
+    Util,
+    INFO_RECOVERY_CODE_SENT,
+    INFO_PASSWORD_RESET,
+    AuthenticationException
+)
+
+
+class LoginView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+        except AuthenticationFailed:
+            raise AuthenticationException()
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
 class RequestRegisterView(GenericAPIView):
