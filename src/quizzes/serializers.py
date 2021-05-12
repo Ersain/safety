@@ -12,7 +12,7 @@ class QuizListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Quiz
-        fields = ('id', 'title', 'score', 'body')
+        fields = ('id', 'title', 'score', 'body', 'is_active')
 
     def get_score(self, obj):
         request = self.context.get('request')
