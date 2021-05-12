@@ -17,6 +17,7 @@ class QuizCategory(models.Model):
 class Quiz(models.Model):
     title = models.CharField(max_length=100)
     body = models.TextField(null=True, blank=True)
+    is_active = models.BooleanField(default=False)
 
     category = models.ForeignKey(
         to='quizzes.QuizCategory',
