@@ -2,6 +2,7 @@ from django.db.models import Max
 from django.db.transaction import atomic
 from rest_framework import serializers
 
+from files.services.s3 import S3Services
 from . import models
 from .services import QuizResultServices
 
@@ -23,9 +24,14 @@ class QuizListSerializer(serializers.ModelSerializer):
 
 
 class QuizCategoryListSerializer(serializers.ModelSerializer):
+    icon = serializers.SerializerMethodField()
+
     class Meta:
         model = models.QuizCategory
-        fields = ('id', 'title', 'is_active')
+        fields = ('id', 'title', 'is_active', 'icon')
+
+    def get_icon(self, obj):
+        return S3Services.generate_object_url(obj.icon.name)
 
 
 class QuizCategoryRetrieveSerializer(serializers.ModelSerializer):
