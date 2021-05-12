@@ -3,7 +3,13 @@ from django.contrib.auth.admin import UserAdmin
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 
 from .forms import UserCreationForm, UserChangeForm
-from .models import User, VerificationCode
+from .models import User, VerificationCode, UserProfile
+
+
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+    can_delete = False
+    fk_name = 'user'
 
 
 @admin.register(User)
@@ -25,6 +31,7 @@ class UserAdmin(UserAdmin):
     )
     search_fields = ('email',)
     ordering = ('email',)
+    inlines = (UserProfileInline,)
 
     def BE_AWARE_NO_WARNING_clear_tokens_and_delete(self, request, queryset):
         users = queryset.values('id')
@@ -35,3 +42,4 @@ class UserAdmin(UserAdmin):
 
 
 admin.site.register(VerificationCode)
+admin.site.register(UserProfile)
