@@ -1,6 +1,6 @@
 from rest_framework import status
-from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.generics import GenericAPIView
+from rest_framework.exceptions import AuthenticationFailed, NotFound
+from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.exceptions import InvalidToken
@@ -11,7 +11,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import User, VerificationCode
 from .serializers import (
     RequestRegisterSerializer, RegisterSerializer,
-    ResetPasswordSerializer, ForgotPasswordSerializer
+    ResetPasswordSerializer, ForgotPasswordSerializer,
+    UserProfileRetrieveSerializer, UserProfileUpdateSerializer
 )
 from .services import UserServices
 from .utils import (
@@ -120,3 +121,26 @@ class ResetPasswordView(GenericAPIView):
         UserServices.reset_password(email, raw_password)
 
         return Response(INFO_PASSWORD_RESET, status=status.HTTP_200_OK)
+
+
+class UserProfileView(RetrieveUpdateAPIView):
+    http_method_names = ['get', 'put']
+    serializer_class = UserProfileUpdateSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        if not hasattr(request.user, 'profile'):
+            raise NotFound()
+        serializer = UserProfileRetrieveSerializer(request.user.profile)
+        return Response(serializer.data)
+
+    def put(self, request, *args, **kwargs):
+        if not hasattr(request.user, 'profile'):
+            raise NotFound()
+
+        instance = request.user.profile
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        obj = serializer.save()
+
+        result = UserProfileRetrieveSerializer(obj)
+        return Response(result.data)

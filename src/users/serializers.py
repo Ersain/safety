@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import User
+from files.services.s3 import S3Services
+from .models import User, UserProfile
+from .services import UserServices
 
 
 class RequestRegisterSerializer(serializers.ModelSerializer):
@@ -48,3 +50,36 @@ class ResetPasswordSerializer(serializers.Serializer):
         if password != password_confirm:
             raise ValidationError("Passwords didn't match")
         return attrs
+
+
+class UserProfileRetrieveSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source='user.email')
+    gender = serializers.SerializerMethodField()
+    photo = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserProfile
+        fields = ('photo', 'phone_number', 'username', 'gender', 'email')
+
+    def get_gender(self, obj):
+        return obj.get_gender_display()
+
+    def get_photo(self, obj):
+        if obj.photo:
+            return S3Services.generate_object_url(obj.photo.name)
+        return None
+
+
+class UserProfileUpdateSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=False)
+
+    class Meta:
+        model = UserProfile
+        fields = ('photo', 'phone_number', 'username', 'gender', 'email')
+
+    def update(self, instance, validated_data):
+        UserServices.update_email_field(
+            user=self.context['request'].user,
+            email=validated_data.pop('email', '')
+        )
+        return super().update(instance, validated_data)
