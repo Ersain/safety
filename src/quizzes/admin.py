@@ -5,6 +5,14 @@ from .models import (
 )
 
 
+class QuestionInline(admin.StackedInline):
+    model = Question
+
+
+class QuestionOptionInline(admin.StackedInline):
+    model = QuestionOption
+
+
 @admin.register(QuizCategory)
 class QuizCategoryAdmin(admin.ModelAdmin):
     list_display = ('pk', 'title', 'size', 'is_active')
@@ -17,6 +25,7 @@ class QuizAdmin(admin.ModelAdmin):
     list_display = ('pk', 'title', 'body',)
     search_fields = ('pk', 'title', 'body')
     autocomplete_fields = ('category',)
+    inlines = (QuestionInline,)
 
 
 @admin.register(Question)
@@ -24,6 +33,7 @@ class QuestionAdmin(admin.ModelAdmin):
     list_display = ('pk', 'title', 'body',)
     search_fields = ('pk', 'title', 'body',)
     autocomplete_fields = ('quiz',)
+    inlines = (QuestionOptionInline,)
 
 
 @admin.register(QuestionOption)
