@@ -31,7 +31,7 @@ class QuizCategoryListSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'is_active', 'icon')
 
     def get_icon(self, obj):
-        return S3Services.generate_object_url(obj.icon.name)
+        return S3Services.generate_object_url(obj.icon.name) if obj.icon else None
 
 
 class QuizCategoryRetrieveSerializer(serializers.ModelSerializer):

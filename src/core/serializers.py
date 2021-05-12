@@ -33,7 +33,7 @@ class TopicListSerializer(serializers.ModelSerializer):
         fields = ('code', 'title', 'is_active', 'icon', 'size')
 
     def get_icon(self, obj: Topic):
-        return S3Services.generate_object_url(obj.icon.name)
+        return S3Services.generate_object_url(obj.icon.name) if obj.icon else None
 
 
 class TopicRetrieveSerializer(serializers.ModelSerializer):
