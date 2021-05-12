@@ -13,7 +13,7 @@ from .serializers import TopicListSerializer, TopicRetrieveSerializer, ArticleLi
 
 
 class TopicsViewSet(ReadOnlyModelViewSet):
-    queryset = Topic.objects.all()
+    queryset = Topic.objects.order_by('-is_active')
     lookup_field = 'code'
     lookup_url_kwarg = 'topic_code'
     serializer_class = TopicListSerializer
