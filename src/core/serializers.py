@@ -1,8 +1,10 @@
-from rest_framework import serializers
 from django.utils.text import Truncator
+from rest_framework import serializers
 
 from files.models import FileChoices
 from files.serializers import FileSerializer
+from files.services.s3 import S3Services
+from quizzes.serializers import QuizListSerializer
 from .models import Topic, Article
 
 
@@ -24,19 +26,25 @@ class ArticleRetrieveSerializer(serializers.ModelSerializer):
 
 
 class TopicListSerializer(serializers.ModelSerializer):
+    icon = serializers.SerializerMethodField()
+
     class Meta:
         model = Topic
-        fields = ('code', 'title', 'is_active')
+        fields = ('code', 'title', 'is_active', 'icon', 'size')
+
+    def get_icon(self, obj: Topic):
+        return S3Services.generate_object_url(obj.icon.name)
 
 
 class TopicRetrieveSerializer(serializers.ModelSerializer):
     videos = serializers.SerializerMethodField()
     comics = serializers.SerializerMethodField()
     articles = ArticleListSerializer(many=True)
+    quizzes = QuizListSerializer(many=True)
 
     class Meta:
         model = Topic
-        fields = ('code', 'title', 'videos', 'comics', 'articles')
+        fields = ('code', 'title', 'videos', 'comics', 'articles', 'quizzes')
 
     def get_videos(self, obj):
         queryset = obj.files.filter(type=FileChoices.VIDEO)

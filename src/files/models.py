@@ -26,6 +26,7 @@ class File(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     file = models.FileField()
+    icon = models.FileField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.code} [{self.title} - {self.file.name}]'

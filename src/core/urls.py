@@ -15,4 +15,5 @@ urlpatterns = [
     path('topics/<str:topic_code>/articles/', views.TopicArticlesViewSet.as_view({'get': 'list'})),
     path('topics/<str:topic_code>/articles/<str:article_code>/',
          views.TopicArticlesViewSet.as_view({'get': 'retrieve'})),
+    path('topics/<str:topic_code>/quizzes/', views.TopicQuizzesViewSet.as_view())
 ]

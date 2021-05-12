@@ -12,9 +12,12 @@ class Topic(models.Model):
         unique=True,
         db_index=True
     )
+    size = models.PositiveIntegerField(default=1)
+    icon = models.FileField(null=True, blank=True)
 
     files = models.ManyToManyField(to='files.File')
     articles = models.ManyToManyField(to='core.Article')
+    quizzes = models.ManyToManyField(to='quizzes.Quiz')
 
     def __str__(self):
         return f'{self.pk} - {self.title}'
