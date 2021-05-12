@@ -15,9 +15,9 @@ class Topic(models.Model):
     size = models.PositiveIntegerField(default=1)
     icon = models.FileField(null=True, blank=True)
 
-    files = models.ManyToManyField(to='files.File')
-    articles = models.ManyToManyField(to='core.Article')
-    quizzes = models.ManyToManyField(to='quizzes.Quiz')
+    files = models.ManyToManyField(to='files.File', blank=True)
+    articles = models.ManyToManyField(to='core.Article', blank=True)
+    quizzes = models.ManyToManyField(to='quizzes.Quiz', blank=True)
 
     def __str__(self):
         return f'{self.pk} - {self.title}'
