@@ -118,7 +118,22 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 
     # exception handling
-    'EXCEPTION_HANDLER': 'core.utils.custom_exception_handler'
+    'EXCEPTION_HANDLER': 'core.utils.custom_exception_handler',
+
+    # permissions
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAdminUser',
+    ],
+
+    # throttling
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '20/day',
+        'user': '1000/day'
+    }
 }
 
 SIMPLE_JWT = {

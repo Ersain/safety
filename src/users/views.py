@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed, NotFound
 from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.exceptions import InvalidToken
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
@@ -24,6 +24,8 @@ from .utils import (
 
 
 class LoginView(TokenObtainPairView):
+    permission_classes = (AllowAny,)
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         try:
@@ -38,6 +40,7 @@ class LoginView(TokenObtainPairView):
 
 class RequestRegisterView(GenericAPIView):
     serializer_class = RequestRegisterSerializer
+    permission_classes = (AllowAny,)
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -53,6 +56,7 @@ class RequestRegisterView(GenericAPIView):
 
 class RegisterView(GenericAPIView):
     serializer_class = RegisterSerializer
+    permission_classes = (AllowAny,)
 
     @staticmethod
     def get_response_data(user):
@@ -73,7 +77,6 @@ class RegisterView(GenericAPIView):
 
 class LogoutView(GenericAPIView):
     serializer_class = TokenRefreshSerializer
-    permission_classes = (IsAuthenticated,)
 
     def post(self, request):
         try:
@@ -87,6 +90,7 @@ class LogoutView(GenericAPIView):
 
 class ForgotPasswordView(GenericAPIView):
     serializer_class = ForgotPasswordSerializer
+    permission_classes = (AllowAny,)
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -105,6 +109,7 @@ class ForgotPasswordView(GenericAPIView):
 
 class ResetPasswordView(GenericAPIView):
     serializer_class = ResetPasswordSerializer
+    permission_classes = (AllowAny,)
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
