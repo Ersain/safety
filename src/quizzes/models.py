@@ -90,7 +90,7 @@ class QuizResult(models.Model):
     )
 
     def __str__(self):
-        return f'{self.pk} - {self.user.email}, {self.quiz.title}'
+        return f'{self.pk} - {self.user}, {self.quiz}'
 
 
 class AcceptedAnswer(models.Model):

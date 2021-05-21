@@ -18,7 +18,7 @@ class QuizListSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if not request:
             return None
-        user = request.data.get('user')
+        user = request.user
         queryset = models.QuizResult.objects.filter(quiz=obj, user=user)
         return queryset.aggregate(score=Max('score'))['score']
 
