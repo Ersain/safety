@@ -68,7 +68,6 @@ class GenderChoices(models.TextChoices):
 
 
 class UserProfile(models.Model):
-    photo = models.FileField(null=True, blank=True)
     phone_regex = RegexValidator(
         regex=r'^\+?1?\d{9,15}$',
         message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
@@ -96,6 +95,11 @@ class UserProfile(models.Model):
     achievements = models.ManyToManyField(
         to='notifications.Achievement',
         blank=True
+    )
+    photo = models.ForeignKey(
+        to='files.ProfilePhoto',
+        on_delete=models.SET_NULL,
+        null=True, blank=True
     )
 
 

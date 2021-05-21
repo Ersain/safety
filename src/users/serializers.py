@@ -67,7 +67,7 @@ class UserProfileRetrieveSerializer(serializers.ModelSerializer):
 
     def get_photo(self, obj):
         if obj.photo:
-            return S3Services.generate_object_url(obj.photo.name)
+            return S3Services.generate_object_url(obj.photo.photo.name)
         return None
 
 

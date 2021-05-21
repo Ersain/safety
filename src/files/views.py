@@ -2,9 +2,10 @@ from django.http import FileResponse
 from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from .models import File, FileChoices
-from .serializers import FileSerializer
+from .models import File, FileChoices, ProfilePhoto
+from .serializers import FileSerializer, ProfilePhotoSerializer
 
 
 class FileRetrieveView(GenericAPIView):
@@ -38,3 +39,8 @@ class ComicDownloadView(GenericAPIView):
         response['Content-Disposition'] = f'attachment; filename="{obj.file.name}"'
 
         return response
+
+
+class ProfilePhotosViewSet(ReadOnlyModelViewSet):
+    queryset = ProfilePhoto.objects.all()
+    serializer_class = ProfilePhotoSerializer
