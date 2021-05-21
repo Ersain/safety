@@ -43,6 +43,9 @@ class QuizResultServices:
     def success_quiz_notification(user, quiz):
         achievement = quiz.achievement
         user.profile.achievements.add(achievement)
+
+        QuizResultServices.unlock_linked_quizzes(quiz)
+
         notification = Notification.objects.create(
             body=achievement.body,
             user=user
@@ -69,3 +72,9 @@ class QuizResultServices:
             },
             status=200
         )
+
+    @staticmethod
+    def unlock_linked_quizzes(quiz):
+        for linked_quiz in quiz.linked_quizzes.iterator():
+            linked_quiz.is_active = True
+            linked_quiz.save()

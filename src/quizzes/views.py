@@ -1,4 +1,5 @@
 from django.db.models import Prefetch
+from django.db.transaction import atomic
 from rest_framework.generics import GenericAPIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
@@ -39,6 +40,7 @@ class QuizViewSet(ReadOnlyModelViewSet):
 class SubmitQuizView(GenericAPIView):
     serializer_class = SubmitQuizSerializer
 
+    @atomic
     def post(self, request, *args, **kwargs):
         user = request.user
         serializer = self.get_serializer(data=request.data)

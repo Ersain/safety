@@ -20,6 +20,9 @@ class Quiz(models.Model):
     is_active = models.BooleanField(default=False)
     pass_mark = models.PositiveIntegerField(default=0)
 
+    linked_quizzes = models.ManyToManyField(
+        to='self', blank=True
+    )
     category = models.ForeignKey(
         to='quizzes.QuizCategory',
         on_delete=models.SET_NULL,
