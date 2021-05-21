@@ -2,8 +2,9 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from files.services.s3 import S3Services
-from .models import User, UserProfile
+from .models import User, UserProfile, GenderChoices
 from .services import UserServices
+from .utils import IgnoreCaseChoiceField
 
 
 class RequestRegisterSerializer(serializers.ModelSerializer):
@@ -72,6 +73,7 @@ class UserProfileRetrieveSerializer(serializers.ModelSerializer):
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=False)
+    gender = IgnoreCaseChoiceField(GenderChoices.choices)
 
     class Meta:
         model = UserProfile

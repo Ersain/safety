@@ -3,6 +3,7 @@ from random import randint
 from django.core.mail import EmailMessage
 from rest_framework import status
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
+from rest_framework.fields import ChoiceField
 
 from .models import VerificationCode
 
@@ -41,3 +42,8 @@ class Util:
         if not data:
             raise ValidationError(detail=ERROR_INVALID_CREDENTIALS)
         data.delete()
+
+
+class IgnoreCaseChoiceField(ChoiceField):
+    def to_internal_value(self, data):
+        return super().to_internal_value(str(data).upper())
