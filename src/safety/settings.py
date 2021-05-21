@@ -137,7 +137,7 @@ REST_FRAMEWORK = {
     },
 
     # date time formats
-    'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%S%fZ'
+    'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%S.%fZ'
 }
 
 SIMPLE_JWT = {
