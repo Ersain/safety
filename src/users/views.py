@@ -169,7 +169,7 @@ class UserNotificationsViewSet(ReadOnlyModelViewSet):
     serializer_class = NotificationSerializer
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+        return self.queryset.filter(user=self.request.user).order_by('-pk')
 
     def retrieve(self, request, *args, **kwargs):
         instance: Notification = self.get_object()

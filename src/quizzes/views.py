@@ -1,6 +1,7 @@
 from django.db.models import Prefetch
 from django.db.transaction import atomic
 from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from .models import QuizCategory, Quiz, Question
@@ -46,7 +47,13 @@ class SubmitQuizView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         instance = serializer.save(user=user)
+
+        result = {}
+        result.update(serializer.data)
+
         if instance.score >= instance.quiz.pass_mark:
-            return QuizResultServices.success_quiz_notification(request.user, instance.quiz, )
+            result.update(QuizResultServices.success_quiz_notification(request.user, instance.quiz, ))
         else:
-            return QuizResultServices.fail_quiz_notification(request.user, instance.quiz, )
+            result.update(QuizResultServices.fail_quiz_notification(request.user, instance.quiz, ))
+
+        return Response(result, status=200)

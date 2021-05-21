@@ -50,13 +50,10 @@ class QuizResultServices:
             body=achievement.body,
             user=user
         )
-        return Response(
-            {
-                'title': notification.title,
-                'body': notification.body,
-            },
-            status=200
-        )
+        return {
+            'title': notification.title,
+            'body': notification.body,
+        }
 
     @staticmethod
     def fail_quiz_notification(user, quiz):
@@ -65,13 +62,10 @@ class QuizResultServices:
             body=f'Вам не удалось пройти {quiz.title}',
             user=user
         )
-        return Response(
-            {
-                'title': notification.title,
-                'body': notification.body,
-            },
-            status=200
-        )
+        return {
+            'title': notification.title,
+            'body': notification.body,
+        }
 
     @staticmethod
     def unlock_linked_quizzes(quiz):

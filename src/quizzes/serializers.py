@@ -78,10 +78,11 @@ class AcceptedAnswerSerializer(serializers.ModelSerializer):
 
 class SubmitQuizSerializer(serializers.ModelSerializer):
     accepted_answers = AcceptedAnswerSerializer(many=True)
+    success = serializers.SerializerMethodField()
 
     class Meta:
         model = models.QuizResult
-        fields = ('quiz', 'accepted_answers')
+        fields = ('quiz', 'accepted_answers', 'success')
 
     @atomic
     def create(self, validated_data):
@@ -89,3 +90,8 @@ class SubmitQuizSerializer(serializers.ModelSerializer):
         quiz_result_instance = super().create(validated_data)
         QuizResultServices.create_accepted_answers(quiz_result_instance, answers)
         return quiz_result_instance
+
+    def get_success(self, obj):
+        if obj.score >= obj.quiz.pass_mark:
+            return True
+        return False
