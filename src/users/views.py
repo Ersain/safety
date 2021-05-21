@@ -3,11 +3,14 @@ from rest_framework.exceptions import AuthenticationFailed, NotFound
 from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework_simplejwt.exceptions import InvalidToken
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from notifications.models import Achievement, Notification
+from notifications.serializers import AchievementSerializer, NotificationSerializer
 from .models import User, VerificationCode
 from .serializers import (
     RequestRegisterSerializer, RegisterSerializer,
@@ -149,3 +152,28 @@ class UserProfileView(RetrieveUpdateAPIView):
 
         result = UserProfileRetrieveSerializer(obj)
         return Response(result.data)
+
+
+class UserAchievementsViewSet(ReadOnlyModelViewSet):
+    queryset = Achievement.objects.all()
+    serializer_class = AchievementSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class UserNotificationsViewSet(ReadOnlyModelViewSet):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance: Notification = self.get_object()
+        instance.is_read = True
+        instance.save()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)

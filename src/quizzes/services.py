@@ -1,3 +1,6 @@
+from rest_framework.response import Response
+
+from notifications.models import Notification
 from .models import QuizCategory, Quiz, Question, QuestionOption, AcceptedAnswer, QuizResult
 
 
@@ -35,3 +38,34 @@ class QuizResultServices:
         question2 = Question.objects.create(title='3+2?', quiz=quiz)
         QuestionOption.objects.create(title='5', question=question2, is_correct=True)
         QuestionOption.objects.create(title='6', question=question2)
+
+    @staticmethod
+    def success_quiz_notification(user, quiz):
+        achievement = quiz.achievement
+        user.profile.achievements.add(achievement)
+        notification = Notification.objects.create(
+            body=achievement.body,
+            user=user
+        )
+        return Response(
+            {
+                'title': notification.title,
+                'body': notification.body,
+            },
+            status=200
+        )
+
+    @staticmethod
+    def fail_quiz_notification(user, quiz):
+        notification = Notification.objects.create(
+            title='Повезет в следующий раз!',
+            body=f'Вам не удалось пройти {quiz.title}',
+            user=user
+        )
+        return Response(
+            {
+                'title': notification.title,
+                'body': notification.body,
+            },
+            status=200
+        )

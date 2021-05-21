@@ -93,6 +93,10 @@ class UserProfile(models.Model):
         null=True, blank=True,
         related_name='profile'
     )
+    achievements = models.ManyToManyField(
+        to='notifications.Achievement',
+        blank=True
+    )
 
 
 @receiver(post_save, sender=User, dispatch_uid="create_profile")

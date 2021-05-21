@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'users',
     'core',
     'files',
-    'quizzes'
+    'quizzes',
+    'notifications'
 ]
 
 MIDDLEWARE = [

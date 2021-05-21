@@ -18,12 +18,18 @@ class Quiz(models.Model):
     title = models.CharField(max_length=100)
     body = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
+    pass_mark = models.PositiveIntegerField(default=0)
 
     category = models.ForeignKey(
         to='quizzes.QuizCategory',
         on_delete=models.SET_NULL,
         null=True, blank=True,
         related_name='quizzes'
+    )
+    achievement = models.OneToOneField(
+        to='notifications.Achievement',
+        on_delete=models.SET_NULL,
+        null=True, blank=True
     )
 
     def __str__(self):

@@ -14,5 +14,14 @@ urlpatterns = [
     path('password-forgot/', views.ForgotPasswordView.as_view(), name='password-forgot'),
     path('password-reset/', views.ResetPasswordView.as_view(), name='password-reset'),
 
-    path('user-profile/', views.UserProfileView.as_view(), name='current-user-profile')
+    path('user-profile/', views.UserProfileView.as_view(), name='current-user-profile'),
+    path('user-profile/achievements/', views.UserAchievementsViewSet.as_view({
+        'get': 'list'
+    })),
+    path('user-profile/notifications/', views.UserNotificationsViewSet.as_view({
+        'get': 'list'
+    })),
+    path('user-profile/notifications/<int:pk>/', views.UserNotificationsViewSet.as_view({
+        'get': 'retrieve'
+    })),
 ]
